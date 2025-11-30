@@ -687,7 +687,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### ⭐ Star this repository if you found it helpful!
 
-**Made with ❤️ by Arijit Nandi**
+**Made with ❤️ by Arijit **
 
 [Back to Top](#️-e-commerce-backend-api)
 

@@ -675,17 +675,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-## 🙏 Acknowledgments
-
-- Spring Boot Team for the amazing framework
-- MySQL for reliable database management
-- Open Source Community for inspiration
-
 ---
 
 <div align="center">
 
-### ⭐ Star this repository if you found it helpful!
 
 **Made with ❤️ by Arijit **
 

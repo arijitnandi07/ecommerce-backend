@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛍️ E-Commerce Backend API
+# 🛍️ E-Commerce Backend 
 
 ### *A Modern, Scalable Spring Boot E-Commerce Platform*
 

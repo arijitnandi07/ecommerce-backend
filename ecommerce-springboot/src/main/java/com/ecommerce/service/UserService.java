@@ -45,6 +45,9 @@ public class UserService {
 
     public User updateUser(Long id, User userDetails) {
         User user = findById(id);
+        if (!user.getEmail().equals(userDetails.getEmail()) && userRepository.existsByEmail(userDetails.getEmail())) {
+            throw new RuntimeException("Email already exists: " + userDetails.getEmail());
+        }
         user.setName(userDetails.getName());
         user.setEmail(userDetails.getEmail());
         user.setAddress(userDetails.getAddress());

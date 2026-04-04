@@ -15,13 +15,12 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Product product;
 
     // Many-to-One relationship with Order
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "order-items")
     private Order order;
 
     @Column(nullable = false)

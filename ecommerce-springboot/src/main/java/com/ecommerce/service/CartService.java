@@ -45,14 +45,19 @@ public class CartService {
         Cart cart = getCartByUserId(userId);
         Product product = productService.findById(productId);
 
-        if (product.getStockQuantity() < quantity) {
+        // Check if product already exists in cart
+        Optional<CartItem> existingItem = cartItemRepository.findByCartAndProduct(cart, product);
+
+        int totalQuantityRequested = quantity;
+        if (existingItem.isPresent()) {
+            totalQuantityRequested += existingItem.get().getQuantity();
+        }
+
+        if (product.getStockQuantity() < totalQuantityRequested) {
             throw new InsufficientStockException(
                     "Not enough stock for product: " + product.getName()
             );
         }
-
-        // Check if product already exists in cart
-        Optional<CartItem> existingItem = cartItemRepository.findByCartAndProduct(cart, product);
 
         CartItem cartItem;
         if (existingItem.isPresent()) {
@@ -76,12 +81,19 @@ public class CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
 
         if (quantity <= 0) {
+            Cart cart = cartItem.getCart();
+            cart.getCartItems().remove(cartItem);
             cartItemRepository.delete(cartItem);
             // Update cart total
-            Cart cart = cartItem.getCart();
             cart.calculateTotalAmount();
             cartRepository.save(cart);
             return null;
+        }
+
+        if (cartItem.getProduct().getStockQuantity() < quantity) {
+            throw new InsufficientStockException(
+                    "Not enough stock for product: " + cartItem.getProduct().getName()
+            );
         }
 
         cartItem.setQuantity(quantity);
@@ -100,6 +112,7 @@ public class CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
 
         Cart cart = cartItem.getCart();
+        cart.getCartItems().remove(cartItem);
         cartItemRepository.delete(cartItem);
 
         // Update cart total
@@ -114,6 +127,7 @@ public class CartService {
 
     public void clearCart(Long userId) {
         Cart cart = getCartByUserId(userId);
+        cart.getCartItems().clear();
         cartItemRepository.deleteByCart(cart);
         cart.setTotalAmount(java.math.BigDecimal.ZERO);
         cartRepository.save(cart);

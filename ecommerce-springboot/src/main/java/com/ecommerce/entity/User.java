@@ -36,19 +36,17 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-cart")
     private Cart cart;
 
-
-
-    // One-to-Many relationship with Orders
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
     // Constructors
-    public User() {}
+    public User() {
+    }
 
     public User(String name, String email, String address) {
         this.name = name;
@@ -59,7 +57,9 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 
     // Getters and Setters

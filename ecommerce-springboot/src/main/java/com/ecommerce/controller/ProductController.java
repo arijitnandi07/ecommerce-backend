@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/products")
 @CrossOrigin(origins = "*")
 public class ProductController {
 
@@ -30,40 +30,26 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> getProductById(@PathVariable Long id) {
-        try {
-            Product product = productService.findById(id);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Product found", product)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(ApiResponse.success("Product found", product));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Product>>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(
-                ApiResponse.success("Products retrieved successfully", products)
-        );
+        return ResponseEntity.ok(ApiResponse.success("Products retrieved successfully", products));
     }
 
     @GetMapping("/available")
     public ResponseEntity<ApiResponse<List<Product>>> getAvailableProducts() {
         List<Product> products = productService.getAvailableProducts();
-        return ResponseEntity.ok(
-                ApiResponse.success("Available products retrieved successfully", products)
-        );
+        return ResponseEntity.ok(ApiResponse.success("Available products retrieved successfully", products));
     }
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<Product>>> searchProducts(@RequestParam String name) {
         List<Product> products = productService.findByNameContaining(name);
-        return ResponseEntity.ok(
-                ApiResponse.success("Search results", products)
-        );
+        return ResponseEntity.ok(ApiResponse.success("Search results", products));
     }
 
     @GetMapping("/price-range")
@@ -71,36 +57,18 @@ public class ProductController {
             @RequestParam BigDecimal minPrice,
             @RequestParam BigDecimal maxPrice) {
         List<Product> products = productService.findByPriceRange(minPrice, maxPrice);
-        return ResponseEntity.ok(
-                ApiResponse.success("Products in price range", products)
-        );
+        return ResponseEntity.ok(ApiResponse.success("Products in price range", products));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable Long id, @Valid @RequestBody Product productDetails) {
-        try {
-            Product updatedProduct = productService.updateProduct(id, productDetails);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Product updated successfully", updatedProduct)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        Product updatedProduct = productService.updateProduct(id, productDetails);
+        return ResponseEntity.ok(ApiResponse.success("Product updated successfully", updatedProduct));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
-        try {
-            productService.deleteProduct(id);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Product deleted successfully")
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(ApiResponse.success("Product deleted successfully"));
     }
 }

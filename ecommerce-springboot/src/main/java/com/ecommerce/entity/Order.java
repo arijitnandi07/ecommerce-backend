@@ -1,6 +1,7 @@
 package com.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -20,7 +21,7 @@ public class Order {
     // Many-to-One relationship with User
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "user-orders")
     private User user;
 
     @Column(name = "order_date", nullable = false)
@@ -30,6 +31,7 @@ public class Order {
     private BigDecimal totalAmount;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
@@ -44,7 +46,9 @@ public class Order {
 
     @PrePersist
     protected void onCreate() {
-        orderDate = LocalDateTime.now();
+        if (orderDate == null) {
+            orderDate = LocalDateTime.now();
+        }
     }
 
     // Method to calculate total amount
@@ -54,8 +58,8 @@ public class Order {
 
         // 2. Loop through each item in the orderItems list.
         for (OrderItem item : this.orderItems) {
-            // 3. For each item, add its price to the running total.
-            total = total.add(item.getPrice());
+            // 3. For each item, add its price multiplied by quantity to the running total.
+            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
         }
 
         // 4. After the loop is done, set the final total.

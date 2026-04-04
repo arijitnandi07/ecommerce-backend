@@ -15,12 +15,11 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonBackReference
+    @JsonBackReference(value = "cart-items")
     private Cart cart;
 
     @Column(nullable = false)

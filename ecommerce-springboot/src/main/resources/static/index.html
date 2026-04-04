@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Backend Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --primary: #3b82f6;
+            --method-get: #0ea5e9;
+            --method-post: #10b981;
+            --method-put: #f59e0b;
+            --method-delete: #ef4444;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient blurred orbs */
+        .orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 20s infinite alternate;
+        }
+        .orb-1 { top: -100px; left: -100px; background: #3b82f6; }
+        .orb-2 { bottom: 10%; right: -100px; background: #8b5cf6; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            font-weight: 300;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeIn 1s ease-out backwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 span {
+            font-size: 2.2rem;
+        }
+
+        .endpoints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .endpoint {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            transition: background 0.2s ease;
+        }
+        
+        .endpoint:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .method {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .method.get { background: rgba(14, 165, 233, 0.15); color: var(--method-get); }
+        .method.post { background: rgba(16, 185, 129, 0.15); color: var(--method-post); }
+        .method.put { background: rgba(245, 158, 11, 0.15); color: var(--method-put); }
+        .method.delete { background: rgba(239, 68, 68, 0.15); color: var(--method-delete); }
+
+        .url {
+            font-family: monospace;
+            font-size: 1.05rem;
+            color: #e2e8f0;
+            word-break: break-all;
+        }
+
+        .description {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <header>
+            <h1>E-Commerce API Console</h1>
+            <p>Explore the complete Spring Boot REST architecture and mappings seamlessly.</p>
+        </header>
+
+        <div class="grid">
+            
+            <!-- Users API -->
+            <div class="card">
+                <h2><span>👤</span> Users Details</h2>
+                <div class="endpoints-list">
+                    <div class="endpoint" style="border-left-color: var(--method-post)">
+                        <div class="endpoint-header"><span class="method post">POST</span><span class="url">/api/v1/users/register</span></div>
+                        <div class="description">Register new user account globally.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/users/{id}</span></div>
+                        <div class="description">Get extensive user profile and data by ID.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/users/email/{email}</span></div>
+                        <div class="description">Get user metadata utilizing an email address lookup.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/users</span></div>
+                        <div class="description">Aggregated list tracking all global users.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-put)">
+                        <div class="endpoint-header"><span class="method put">PUT</span><span class="url">/api/v1/users/{id}</span></div>
+                        <div class="description">Update explicit user attributes and overwrite data.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-delete)">
+                        <div class="endpoint-header"><span class="method delete">DELETE</span><span class="url">/api/v1/users/{id}</span></div>
+                        <div class="description">Delete user array causing cascading hierarchy wipe.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products API -->
+            <div class="card">
+                <h2><span>📦</span> Products Directory</h2>
+                <div class="endpoints-list">
+                    <div class="endpoint" style="border-left-color: var(--method-post)">
+                        <div class="endpoint-header"><span class="method post">POST</span><span class="url">/api/v1/products</span></div>
+                        <div class="description">Create product establishing brand-new inventory stock.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/products</span></div>
+                        <div class="description">Get all products iterating over standard inventory list.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/products/{id}</span></div>
+                        <div class="description">Get product strictly matching individual ID.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/products/available</span></div>
+                        <div class="description">Get available products automatically rejecting nil stocks.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/products/search?name=</span></div>
+                        <div class="description">Search products utilizing fuzzy parameterized text matches.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/products/price-range</span></div>
+                        <div class="description">Filter by price range isolating inventory items mathematically.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-put)">
+                        <div class="endpoint-header"><span class="method put">PUT</span><span class="url">/api/v1/products/{id}</span></div>
+                        <div class="description">Update product values seamlessly.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-delete)">
+                        <div class="endpoint-header"><span class="method delete">DELETE</span><span class="url">/api/v1/products/{id}</span></div>
+                        <div class="description">Delete product effectively clearing store availability.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart API -->
+            <div class="card">
+                <h2><span>🛍️</span> Cart Mechanisms</h2>
+                <div class="endpoints-list">
+                    <div class="endpoint" style="border-left-color: var(--method-post)">
+                        <div class="endpoint-header"><span class="method post">POST</span><span class="url">/api/v1/cart/add/{userId}</span></div>
+                        <div class="description">Add array to cart validating against real-time global stock limitation.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/cart/{userId}</span></div>
+                        <div class="description">Get cart calculating exact grand total prices for active sessions.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/cart/items/{userId}</span></div>
+                        <div class="description">Get cart items isolating active nested elements without wrapper.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-put)">
+                        <div class="endpoint-header"><span class="method put">PUT</span><span class="url">/api/v1/cart/item/{cartItemId}</span></div>
+                        <div class="description">Update quantity re-validating the sub-totals accurately dynamically.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-delete)">
+                        <div class="endpoint-header"><span class="method delete">DELETE</span><span class="url">/api/v1/cart/item/{cartItemId}</span></div>
+                        <div class="description">Remove item permanently purging out-of-date array configurations.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-delete)">
+                        <div class="endpoint-header"><span class="method delete">DELETE</span><span class="url">/api/v1/cart/clear/{userId}</span></div>
+                        <div class="description">Clear cart entirely bypassing normal loop.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders API -->
+            <div class="card">
+                <h2><span>🚚</span> Orders & Shipping</h2>
+                <div class="endpoints-list">
+                    <div class="endpoint" style="border-left-color: var(--method-post)">
+                        <div class="endpoint-header"><span class="method post">POST</span><span class="url">/api/v1/orders/place/{userId}</span></div>
+                        <div class="description">Place order wrapping active cart elements immediately allocating ledger.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/orders/{orderId}</span></div>
+                        <div class="description">Get exact singular order receipts based on identification keys.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/orders/user/{userId}</span></div>
+                        <div class="description">Get user orders recursively compiling history array maps.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/orders/{orderId}/items</span></div>
+                        <div class="description">Get embedded nested products stored globally inside an order block.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-get)">
+                        <div class="endpoint-header"><span class="method get">GET</span><span class="url">/api/v1/orders</span></div>
+                        <div class="description">Get all general global orders executing administrative extraction.</div>
+                    </div>
+                    <div class="endpoint" style="border-left-color: var(--method-delete)">
+                        <div class="endpoint-header"><span class="method delete">DELETE</span><span class="url">/api/v1/orders/{orderId}</span></div>
+                        <div class="description">Cancel order refunding quantities immediately scaling back stock inventory!</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

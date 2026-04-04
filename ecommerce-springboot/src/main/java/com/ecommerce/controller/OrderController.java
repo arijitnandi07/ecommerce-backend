@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/orders")
 @CrossOrigin(origins = "*")
 public class OrderController {
 
@@ -25,44 +25,20 @@ public class OrderController {
 
     @PostMapping("/place/{userId}")
     public ResponseEntity<ApiResponse<Order>> placeOrder(@PathVariable Long userId) {
-        try {
-            Order order = orderService.placeOrder(userId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Order placed successfully", order)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        Order order = orderService.placeOrder(userId);
+        return ResponseEntity.ok(ApiResponse.success("Order placed successfully", order));
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse<Order>> getOrderById(@PathVariable Long orderId) {
-        try {
-            Order order = orderService.findById(orderId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Order found", order)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        Order order = orderService.findById(orderId);
+        return ResponseEntity.ok(ApiResponse.success("Order found", order));
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse<List<Order>>> getUserOrders(@PathVariable Long userId) {
-        try {
-            List<Order> orders = orderService.getUserOrders(userId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("User orders retrieved successfully", orders)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        List<Order> orders = orderService.getUserOrders(userId);
+        return ResponseEntity.ok(ApiResponse.success("User orders retrieved successfully", orders));
     }
 
     @GetMapping("/user/{userId}/paged")
@@ -70,39 +46,21 @@ public class OrderController {
             @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        try {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Order> orders = orderService.getUserOrdersPaged(userId, pageable);
-            return ResponseEntity.ok(
-                    ApiResponse.success("User orders retrieved successfully", orders)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders = orderService.getUserOrdersPaged(userId, pageable);
+        return ResponseEntity.ok(ApiResponse.success("User orders retrieved successfully", orders));
     }
 
     @GetMapping("/{orderId}/items")
     public ResponseEntity<ApiResponse<List<OrderItem>>> getOrderItems(@PathVariable Long orderId) {
-        try {
-            List<OrderItem> orderItems = orderService.getOrderItems(orderId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Order items retrieved successfully", orderItems)
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
+        List<OrderItem> orderItems = orderService.getOrderItems(orderId);
+        return ResponseEntity.ok(ApiResponse.success("Order items retrieved successfully", orderItems));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Order>>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(
-                ApiResponse.success("All orders retrieved successfully", orders)
-        );
+        return ResponseEntity.ok(ApiResponse.success("All orders retrieved successfully", orders));
     }
 
     @GetMapping("/date-range")
@@ -110,25 +68,15 @@ public class OrderController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         List<Order> orders = orderService.getOrdersByDateRange(startDate, endDate);
-        return ResponseEntity.ok(
-                ApiResponse.success("Orders in date range retrieved successfully", orders)
-        );
+        return ResponseEntity.ok(ApiResponse.success("Orders in date range retrieved successfully", orders));
     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<ApiResponse<Void>> cancelOrder(@PathVariable Long orderId) {
-        try {
-            orderService.cancelOrder(orderId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Order cancelled successfully")
-            );
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(e.getMessage())
-            );
-        }
-
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.success("Order cancelled successfully"));
     }
+
     @GetMapping("/ping")
     public String ping() {
         return "OrderController is active!";

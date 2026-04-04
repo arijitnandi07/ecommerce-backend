@@ -19,12 +19,12 @@ public class Cart {
     // One-to-One relationship with User
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "user-cart")
     private User user;
 
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "cart-items")
     private List<CartItem> cartItems = new ArrayList<>();
 
 

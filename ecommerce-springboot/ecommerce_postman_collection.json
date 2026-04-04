@@ -1,0 +1,200 @@
+{
+  "info": {
+    "name": "E-Commerce API Architecture",
+    "description": "Complete 26 endpoint suite structure for native E-Commerce application with hardcoded URLs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "👤 Users",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@test.com\",\n    \"address\": \"123 Test Ave\"\n}"
+            },
+            "url": { "raw": "http://localhost:8080/api/v1/users/register", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users", "register"] }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/users", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users"] } }
+        },
+        {
+          "name": "Get User By ID",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/users/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users", "1"] } }
+        },
+        {
+          "name": "Get User By Email",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/users/email/test@test.com", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users", "email", "test@test.com"] } }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Testing Name\",\n    \"email\": \"test@test.com\",\n    \"address\": \"456 Brand New Ave\"\n}"
+            },
+            "url": { "raw": "http://localhost:8080/api/v1/users/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users", "1"] }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/v1/users/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "users", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Super Gadget\",\n    \"description\": \"An amazing new tech framework\",\n    \"price\": 199.99,\n    \"stockQuantity\": 50\n}"
+            },
+            "url": { "raw": "http://localhost:8080/api/v1/products", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products"] }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/products", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products"] } }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/products/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products", "1"] } }
+        },
+        {
+          "name": "Get Available Products",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/products/available", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products", "available"] } }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/products/search?name=test",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "products", "search"],
+              "query": [{ "key": "name", "value": "test" }]
+            }
+          }
+        },
+        {
+          "name": "Filter by Price",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/products/price-range?minPrice=50&maxPrice=150",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "products", "price-range"],
+              "query": [{ "key": "minPrice", "value": "50" }, { "key": "maxPrice", "value": "150" }]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Super Gadget V2\",\n    \"description\": \"Upgraded tech framework\",\n    \"price\": 299.99,\n    \"stockQuantity\": 75\n}"
+            },
+            "url": { "raw": "http://localhost:8080/api/v1/products/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products", "1"] }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/v1/products/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "products", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ Cart",
+      "item": [
+        {
+          "name": "Add mapping to Cart",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"productId\": 1,\n    \"quantity\": 2\n}"
+            },
+            "url": { "raw": "http://localhost:8080/api/v1/cart/add/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "cart", "add", "1"] }
+          }
+        },
+        {
+          "name": "Get User Cart Wrapper",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/cart/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "cart", "1"] } }
+        },
+        {
+          "name": "Get Inner Cart Items",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/cart/items/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "cart", "items", "1"] } }
+        },
+        {
+          "name": "Update Cart Quants",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/cart/item/1?quantity=5",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "cart", "item", "1"],
+              "query": [{ "key": "quantity", "value": "5" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Single Cart Item",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/v1/cart/item/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "cart", "item", "1"] } }
+        },
+        {
+          "name": "Wipe Complete Cart array",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/v1/cart/clear/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "cart", "clear", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "🚚 Orders",
+      "item": [
+        {
+          "name": "Place Final Order",
+          "request": { "method": "POST", "url": { "raw": "http://localhost:8080/api/v1/orders/place/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders", "place", "1"] } }
+        },
+        {
+          "name": "Get Detailed Order",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/orders/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders", "1"] } }
+        },
+        {
+          "name": "Get Specific User History",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/orders/user/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders", "user", "1"] } }
+        },
+        {
+          "name": "Get Order Items Nested list",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/orders/1/items", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders", "1", "items"] } }
+        },
+        {
+          "name": "Get All Admin Orders",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/orders", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders"] } }
+        },
+        {
+          "name": "Cancel System Order",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/v1/orders/1", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "orders", "1"] } }
+        }
+      ]
+    }
+  ]
+}

@@ -64,6 +64,7 @@ public class OrderService {
                     cartItem.getSubtotal()
             );
             orderItemRepository.save(orderItem);
+            order.getOrderItems().add(orderItem);
         }
 
         // Clear cart after successful order
